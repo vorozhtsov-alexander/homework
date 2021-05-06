@@ -10,12 +10,12 @@
 * Build the project with help command:
 
 ```bash
-gradle build
+gradle build -x test
 ```
 or with help gradle wrapper:
 
 ```bash
-gradlew build
+gradlew build -x test
 ```
 
 * Create docker image:
