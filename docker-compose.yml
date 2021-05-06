@@ -1,0 +1,23 @@
+
+version: '3.7'
+
+services:
+  app:
+    image: 'vor/homework:latest'
+    ports:
+      - "8080:8080"
+    build:
+      context: .
+    container_name: app
+    restart: always # restart application if cassandra is not started yet
+    depends_on:
+      - db-cassandra
+
+  db-cassandra:
+    image: "cassandra:3.11.9"
+    container_name: "db-cassandra"
+    ports:
+      - "9042:9042" # for developers needs
+    environment:
+      - "MAX_HEAP_SIZE=256M"
+      - "HEAP_NEWSIZE=128M"
