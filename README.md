@@ -1,6 +1,6 @@
 # Getting Started
 
-##Requirements
+## Requirements
 
 * Jdk 11
 * Docker
