@@ -16,13 +16,14 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.data:spring-data-cassandra'
-	implementation 'io.leangen.graphql:spqr:0.10.0'
-	implementation 'com.graphql-java:graphiql-spring-boot-starter:4.0.0'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'io.leangen.graphql:spqr:0.11.2'
+	testImplementation('org.springframework.boot:spring-boot-starter-test'){
+		exclude group: 'com.vaadin.external.google', module: 'android-json'
+	}
 	testImplementation 'io.projectreactor:reactor-test'
+	testImplementation 'org.testcontainers:junit-jupiter:1.15.3'
 	testImplementation "org.testcontainers:cassandra:1.15.3"
 }
 

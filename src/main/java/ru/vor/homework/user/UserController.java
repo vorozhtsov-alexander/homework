@@ -1,27 +1,26 @@
 package ru.vor.homework.user;
 
+import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.FileCopyUtils;
+import org.springframework.http.ZeroCopyHttpOutputMessage;
+import org.springframework.http.codec.multipart.FilePart;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.UUID;
 
 @RestController
@@ -65,30 +64,23 @@ public class UserController {
         return userService.findById(id);
     }
 
-    @RequestMapping(value = "/users/upload-avatar/{id}")
+    @PostMapping(value = "/users/upload-avatar/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<String> uploadAvatar(@PathVariable UUID id, @RequestPart("file") MultipartFile file) throws IOException {
-        userService.uploadAvatar(id, file);
-        return new ResponseEntity<>("File has been uploaded!", HttpStatus.OK);
+    public Mono<Void> uploadAvatar(@PathVariable UUID id, @RequestPart("file") FilePart file) {
+        return userService.uploadAvatar(id, file);
     }
 
-// todo by some reason spring doesn't support FilePart
-
-//    @PostMapping(value = "/users/upload-avatar/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseStatus(value = HttpStatus.OK)
-//    public Mono<Void> uploadAvatar(@PathVariable UUID id, @RequestPart("file") Mono<FilePart> file) {
-//        return userService.uploadAvatar(id, file);
-//    }
-
-
     @GetMapping("/users/download-avatar/{id}")
-    public void downloadAvatar(@PathVariable UUID id, HttpServletResponse response) throws IOException {
+    public Mono<Void> downloadAvatar(@PathVariable UUID id, ServerHttpResponse response) {
 
-        ByteBuffer buffer = userService.getAvatar(id).block();
+        return userService.getAvatar(id).flatMap(item -> {
 
-        if (buffer != null) {
-            response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+id+".jpg");
-            FileCopyUtils.copy(buffer.array(), response.getOutputStream());
-        }
+            ZeroCopyHttpOutputMessage zeroCopyResponse = (ZeroCopyHttpOutputMessage) response;
+            response.getHeaders().set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+id+".jpg");
+            response.getHeaders().setContentType(MediaType.APPLICATION_OCTET_STREAM);
+
+            Mono<DataBuffer> body = Mono.just(zeroCopyResponse.bufferFactory().wrap(item.array()));
+            return zeroCopyResponse.writeWith(body);
+        });
     }
 }

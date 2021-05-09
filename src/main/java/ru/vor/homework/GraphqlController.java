@@ -8,21 +8,27 @@ import io.leangen.graphql.GraphQLSchemaGenerator;
 import io.leangen.graphql.metadata.strategy.query.AnnotatedResolverBuilder;
 import io.leangen.graphql.metadata.strategy.query.PublicResolverBuilder;
 import io.leangen.graphql.metadata.strategy.value.jackson.JacksonValueMapperFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.vor.homework.user.UserResolver;
 
+import javax.annotation.PostConstruct;
 import java.util.Map;
 
 @RestController
 public class GraphqlController {
 
-    private final GraphQL graphQL;
+    private final UserResolver userResolver;
 
-    @Autowired
-    public GraphqlController(UserResolver userResolver) {
+    private GraphQL graphQL;
+
+    public GraphqlController(final UserResolver userResolver) {
+        this.userResolver = userResolver;
+    }
+
+    @PostConstruct
+    public void init(){
         GraphQLSchema schema = new GraphQLSchemaGenerator().withResolverBuilders(
             // Resolve by annotations
             new AnnotatedResolverBuilder(),

@@ -1,19 +1,13 @@
 package ru.vor.homework.user;
 
-import com.datastax.dse.driver.internal.core.graph.ByteBufUtil;
 import com.datastax.oss.driver.api.core.uuid.Uuids;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.core.io.buffer.DataBufferUtils;
-import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 import java.util.UUID;
@@ -53,7 +47,8 @@ public class UserService {
     }
 
     public Mono<ByteBuffer> getAvatar(UUID id) {
-        return userRepository.findById(id).flatMap(item -> Mono.just(item.getAvatar()));
+        return userRepository.findById(id)
+            .flatMap(item -> Mono.just(item.getAvatar()));
     }
 
     public Mono<UserDTO> update(UUID id,  UserDTO userData) {
@@ -75,31 +70,14 @@ public class UserService {
         return userRepository.deleteById(id);
     }
 
-    public void uploadAvatar(UUID id, MultipartFile file) throws IOException {
+    public Mono<Void> uploadAvatar(UUID id,  FilePart file) {
 
-        User user = userRepository.findById(id).block();
-        if (user != null) {
-            user.setAvatar(ByteBuffer.wrap(file.getInputStream().readAllBytes()));
-            userRepository.save(user).block();
-        }
+        return userRepository.findById(id)
+            .flatMap(user -> file.content()
+                .next() //todo check big file
+                .flatMap(content -> {
+                    user.setAvatar(content.asByteBuffer());
+                    return userRepository.save(user);
+                })).flatMap(item -> Mono.empty());
     }
-
-//    public Mono<Void> uploadAvatar(UUID id,  Mono<FilePart> file) {
-//
-//        return userRepository.findById(id).flatMap(user -> {
-//
-//            DataBuffer buffer = DefaultDataBufferFactory.sharedInstance.allocateBuffer();
-//
-//            return file.flatMap(filePart -> {
-//                filePart.content()
-//                        .doOnNext(buffer::write)
-//                        .doOnComplete(() -> {
-//                            user.setAvatar(buffer.asByteBuffer());
-//                            userRepository.save(user);
-//                        });
-//                    return Mono.empty();
-//                }
-//            );
-//        });
-//    }
 }

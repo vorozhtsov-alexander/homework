@@ -30,11 +30,8 @@ docker build -t vor/homework .
 docker-compose up
 ```
 
-## How to use
+## Examples for GraphQL:
 
-Open [http://localhost:8080/graphiql](http://localhost:8080/graphiql) in browser to make requests
-
-Examples:
 * Create user:
 ```text
 mutation{

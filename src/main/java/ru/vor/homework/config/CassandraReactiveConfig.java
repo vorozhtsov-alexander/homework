@@ -1,4 +1,4 @@
-package ru.vor.homework;
+package ru.vor.homework.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
