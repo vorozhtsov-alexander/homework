@@ -1,0 +1,50 @@
+.create-user{
+  width: 400px;
+  padding-bottom: 30px;
+  padding-top: 30px;
+}
+
+.create-user-title {
+  border: 2px solid black;
+  margin:5px;
+  padding: 5px;
+  height: 20px;
+  display:flex;
+  justify-content: center;
+  overflow:hidden;
+  border-radius: 3%;
+  white-space:nowrap;
+}
+
+.create-user-editor {
+    border: 2px solid black;
+    margin:10px;
+    padding: 10px;
+    height: 200px;
+    white-space:nowrap;
+}
+
+.create-list-title:hover{
+    font-weight: bold;
+}
+
+.user-list td {
+  padding: 10px;
+}
+
+.user-list {
+  border: 1px solid black;
+}
+
+.alert-danger{
+  color: red;
+}
+
+.form-group{
+  padding: 3px;
+}
+
+.avatar{
+  width: 100px;
+  height: 100px;
+}

@@ -1,5 +1,6 @@
 package ru.vor.homework;
 
+import graphql.ExecutionInput;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
 import graphql.GraphQLException;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.vor.homework.user.UserResolver;
 
 import javax.annotation.PostConstruct;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -40,10 +42,17 @@ public class GraphqlController {
     }
 
     @PostMapping(value = "/graphql")
-    public Map<String,Object> execute(@RequestBody Map<String, String> request)
+    public ExecutionResult execute(@RequestBody Map<String, Object> request)
         throws GraphQLException {
-        ExecutionResult result = graphQL.execute(request.get("query"));
-        return result.getData();
+        Map<String, Object> variables = (Map<String, Object>) request.get("variables");
+        if (variables == null) {
+            variables = new HashMap<>();
+        }
+        return graphQL.execute(ExecutionInput.newExecutionInput()
+            .query((String)request.get("query"))
+            .operationName((String)request.get("operationName"))
+            .variables(variables)
+            .build());
 
     }
 }

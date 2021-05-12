@@ -1,13 +1,15 @@
 # Getting Started
 
-## Requirements
+## Install back-end
+
+### Requirements
 
 * Jdk 11
 * Docker
 
-## Starting
+### Starting
 
-* Build the project with help command:
+* Build the project (in root of sources) with help command:
 
 ```bash
 gradle build -x test
@@ -30,7 +32,10 @@ docker build -t vor/homework .
 docker-compose up
 ```
 
-## Examples for GraphQL:
+In docker will be started application (available by address http://localhost:8080/) and 
+cassandra db (available by address localhost:9042).
+
+### Examples of queries for GraphQL:
 
 * Create user:
 ```text
@@ -52,3 +57,40 @@ mutation{
   }
 }
 ```
+
+## Install front-end
+
+### Requirements
+
+* Node js
+
+### Starting
+
+* Move to front-end folder: 
+
+```text
+cd ./front-end
+```
+
+* Install angular cli:
+```text
+npm install --save-dev @angular-devkit/build-angular
+```
+
+* Build the application:
+```text
+ng build
+```
+
+if you faced with exception in graphql-tag library then try to downgrade the library:
+
+```text
+npm install graphql-tag@2.10.4
+```
+
+* Start the application:
+```text
+ng serve
+```
+
+* Open in browser [http://localhost:4200/](http://localhost:4200/)

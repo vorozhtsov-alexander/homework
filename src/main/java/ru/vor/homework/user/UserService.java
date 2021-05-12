@@ -52,18 +52,19 @@ public class UserService {
     }
 
     public Mono<UserDTO> update(UUID id,  UserDTO userData) {
-        return userRepository.findById(id).flatMap(user -> {
-            user.setEmail(userData.getEmail());
-            user.setFirstName(userData.getFirstName());
-            user.setLastName(userData.getLastName());
-            user.setRole(userData.getRole());
-            if (StringUtils.isNotEmpty(userData.getPassword()) &&
-                !Objects.equals(userData.getPassword(), user.getPassword())) {
-                user.setPassword(passwordEncoder.encode(userData.getPassword()));
-            }
-            userRepository.save(user);
-            return Mono.just(new UserDTO(user));
-        });
+        return userRepository.findById(id)
+            .flatMap(user -> {
+                user.setEmail(userData.getEmail());
+                user.setFirstName(userData.getFirstName());
+                user.setLastName(userData.getLastName());
+                user.setRole(userData.getRole());
+                if (StringUtils.isNotEmpty(userData.getPassword()) &&
+                    !Objects.equals(userData.getPassword(), user.getPassword())) {
+                    user.setPassword(passwordEncoder.encode(userData.getPassword()));
+                }
+                return userRepository.save(user);
+            })
+            .flatMap(item -> Mono.just(new UserDTO(item)));
     }
 
     public Mono<Void> delete(UUID id) {

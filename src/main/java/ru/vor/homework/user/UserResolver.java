@@ -21,7 +21,6 @@ public class UserResolver {
         this.userService = userService;
     }
 
-    //todo it seems that validation works but doesn't show friendly message
     @GraphQLMutation(name="createUser")
     public UserDTO createUser(@GraphQLArgument(name="details") @Valid UserDTO user) {
         return userService.create(user).share().block();
