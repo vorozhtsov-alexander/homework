@@ -1,0 +1,79 @@
+<div class="card mt-4">
+  <h4 class="card-header">User list</h4>
+  <div class="card-body">
+
+    <div class="create-user">
+      <input *ngIf = "!createUserActive" type="button" value="Create New User" (click)="activateCreateUser()" class="btn btn-outline-primary">
+      <div *ngIf = "createUserActive">
+
+      <form [formGroup]="angForm" novalidate>
+        <div class="form-group">
+          <label class="center-block">Email:
+            <input class="form-control" formControlName="email" [(ngModel)]="email">
+          </label>
+          <span *ngIf="angForm.controls['email'].invalid" class="alert alert-danger">
+            <span *ngIf="angForm.controls['email'].errors.required">
+              required.
+            </span>
+          </span>
+        </div>
+        <div class="form-group">
+          <label class="center-block">First name:
+            <input class="form-control" formControlName="firstName" [(ngModel)]="firstName">
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="center-block">Last name:
+            <input class="form-control" formControlName="lastName" [(ngModel)]="lastName">
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="center-block">Role:
+            <input class="form-control" formControlName="role" [(ngModel)]="role">
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="center-block">Password:
+            <input class="form-control" formControlName="password" [(ngModel)]="password">
+          </label>
+        </div>
+
+          <div class="form-group">
+            <label for="file">Choose File</label>
+            <input type="file"
+                   id="file"
+                   (change)="handleFileInput($event.target.files)">
+          </div>
+
+          <input type="button" value="Cancel" (click)="deactivateCreateUser()" class="btn btn-outline-primary">&nbsp;
+          <input type="button" [disabled]="angForm.invalid" value="Save" (click)="saveUser()" class="btn btn-outline-primary">
+        </form>
+      </div>
+    </div>
+
+    <table *ngIf = "!createUserActive" mdbTable striped="true" class="table">
+      <thead>
+      <tr>
+        <th></th><th>id</th><th>email</th><th>first name</th><th>last name</th><th>role</th><th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr mdbTableCol *ngFor="let list of lists">
+        <td><img src="http://localhost:8080/users/download-avatar/{{list.id}}" alt="avatar" class="avatar"/></td>
+        <th scope="row">{{list.id}}</th>
+        <td>{{list.email}}</td>
+        <td>{{list.firstName}}</td>
+        <td>{{list.lastName}}</td>
+        <td>{{list.role}}</td>
+        <td>
+          <input type="button" value="Edit" (click)="activateUpdateUser(list)" class="btn btn-outline-primary">&nbsp;
+          <input type="button" value="Delete" (click)="deleteUser(list)" class="btn btn-outline-primary">
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+
+  </div>
+</div>
+

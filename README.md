@@ -32,7 +32,7 @@ docker build -t vor/homework .
 docker-compose up
 ```
 
-In docker will be started application (available by address http://localhost:8080/) and 
+In docker application will be started  (available by address http://localhost:8080/) and 
 cassandra db (available by address localhost:9042).
 
 ### Examples of queries for GraphQL:
@@ -94,3 +94,5 @@ ng serve
 ```
 
 * Open in browser [http://localhost:4200/](http://localhost:4200/)
+
+Use admin/admin to sign in. At starting application creates user with admin role if it doesn't exist.

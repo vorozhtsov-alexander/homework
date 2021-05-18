@@ -42,8 +42,7 @@ public class GraphqlController {
     }
 
     @PostMapping(value = "/graphql")
-    public ExecutionResult execute(@RequestBody Map<String, Object> request)
-        throws GraphQLException {
+    public ExecutionResult execute(@RequestBody Map<String, Object> request) throws GraphQLException {
         Map<String, Object> variables = (Map<String, Object>) request.get("variables");
         if (variables == null) {
             variables = new HashMap<>();

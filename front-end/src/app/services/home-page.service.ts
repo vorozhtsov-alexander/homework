@@ -5,7 +5,7 @@ import {map} from 'rxjs/operators';
 import {Apollo} from 'apollo-angular';
 import gql from 'graphql-tag';
 
-import { List } from 'src/app/models/List';
+import { List } from 'src/app/models/list';
 
 const homePageQuery = gql
   `{

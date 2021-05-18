@@ -6,7 +6,8 @@ import { ApolloModule, Apollo } from 'apollo-angular';
 import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
 import {InMemoryCache} from 'apollo-cache-inmemory';
 
-const uri = 'http://localhost:8080/graphql';  // Back-End GraphQL EndPoint
+import { environment } from 'src/environments/environment';
+const uri = environment.graphql;  // Back-End GraphQL EndPoint
 
 @NgModule({
   exports: [

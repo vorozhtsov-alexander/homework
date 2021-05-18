@@ -1,10 +1,12 @@
 package ru.vor.homework.user;
 
 import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.Indexed;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.nio.ByteBuffer;
+import java.util.Date;
 import java.util.UUID;
 
 @Table
@@ -13,6 +15,7 @@ public class User {
     @PrimaryKey
     private UUID id;
     @Column
+    @Indexed //todo add unique index
     private String email;
     @Column
     private String password;
@@ -21,9 +24,15 @@ public class User {
     @Column
     private String lastName;
     @Column
+    @Indexed
     private String role;
     @Column
     private ByteBuffer avatar; //todo move to separate table.
+    @Column
+    @Indexed
+    private UUID refreshToken;
+    @Column
+    private Date expireTime;
 
     public UUID getId() {
         return id;
@@ -79,5 +88,21 @@ public class User {
 
     public void setAvatar(final ByteBuffer avatar) {
         this.avatar = avatar;
+    }
+
+    public UUID getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(final UUID refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public Date getExpireTime() {
+        return expireTime;
+    }
+
+    public void setExpireTime(final Date expireTime) {
+        this.expireTime = expireTime;
     }
 }

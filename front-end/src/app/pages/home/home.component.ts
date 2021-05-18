@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 
-import { List } from 'src/app/models/List';
+import { List } from 'src/app/models/list';
 import { HomePageService } from 'src/app/services/home-page.service';
 import { ListMutationService } from 'src/app/services/list-mutation.service';
 import { FormGroup,  FormBuilder,  Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-home-page',
-  templateUrl: './home-page.component.html',
-  styleUrls: ['./home-page.component.css']
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
 export class HomePageComponent implements OnInit {
 
@@ -109,13 +109,13 @@ export class HomePageComponent implements OnInit {
         this.listMutationService.postFile(this.id, this.fileToUpload);
       }
     }
-    
+
     this.createUserActive = false;
   }
 
-  deleteUser(id:String):void{
+  deleteUser(list:List):void{
     this.listMutationService
-      .deleteUser(id)
+      .deleteUser(list.id)
       .subscribe(newList => {
         this.homePageService
           .getAllLists()

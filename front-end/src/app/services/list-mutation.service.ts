@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpEvent, HttpErrorResponse, HttpEventType } from  '@angular/common/http';
+import { HttpClient} from  '@angular/common/http';
 import { Observable} from 'rxjs';
 import { map} from 'rxjs/operators';
 
 import {Apollo} from 'apollo-angular';
 import gql from 'graphql-tag';
 
-import { List } from 'src/app/models/List';
+import { List } from 'src/app/models/list';
+import { environment } from 'src/environments/environment';
 
 const createUserMutation = gql
 `mutation createUser($email:String!, $firstName:String!, $lastName:String!, $role:String!, $password:String!){
@@ -69,7 +70,7 @@ export class ListMutationService {
   }
 
   postFile(id:String, fileToUpload: File) {
-    const endpoint = 'http://localhost:8080/users/upload-avatar/'+id; //todo move server url in settings
+    const endpoint = `${environment.apiUrl}/users/upload-avatar/${id}`; //todo move server url in settings
     const formData: FormData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
     this.httpClient

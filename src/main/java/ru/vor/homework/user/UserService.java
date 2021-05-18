@@ -48,6 +48,7 @@ public class UserService {
 
     public Mono<ByteBuffer> getAvatar(UUID id) {
         return userRepository.findById(id)
+            .filter(item -> item.getAvatar() != null)
             .flatMap(item -> Mono.just(item.getAvatar()));
     }
 
