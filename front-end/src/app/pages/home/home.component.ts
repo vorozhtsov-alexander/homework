@@ -83,30 +83,52 @@ export class HomePageComponent implements OnInit {
     }
 
     if (this.id == '' || this.id == null) {
+      console.log("create user");
       this.listMutationService
         .createUser(this.email, this.firstName, this.lastName, this.role, this.password)
         .subscribe(newList => {
 
           if (this.fileToUpload != null) {
-            this.listMutationService.postFile(newList.id, this.fileToUpload);
-          }
+            console.log("upload file");
+            this.listMutationService
+              .postFile(newList.id, this.fileToUpload)
+              .subscribe( item => {
+                this.homePageService
+                  .getAllLists()
+                  .subscribe(lists => this.lists = lists);
+              });
+          } else {
 
-          this.homePageService
-            .getAllLists()
-            .subscribe(lists => this.lists = lists);
+            this.homePageService
+              .getAllLists()
+              .subscribe(lists => this.lists = lists);
+          }
         });
 
     } else {
-      this.listMutationService
-        .updateUser(this.id, this.email, this.firstName, this.lastName, this.role, this.password)
-        .subscribe(newList => {
-          this.homePageService
-            .getAllLists()
-            .subscribe(lists => this.lists = lists);
-        });
 
+      console.log("update user");
       if (this.fileToUpload != null) {
-        this.listMutationService.postFile(this.id, this.fileToUpload);
+        this.listMutationService
+          .postFile(this.id, this.fileToUpload)
+          .subscribe( item => {
+            this.listMutationService
+              .updateUser(this.id, this.email, this.firstName, this.lastName, this.role, this.password)
+              .subscribe(newList => {
+                this.homePageService
+                  .getAllLists()
+                  .subscribe(lists => this.lists = lists);
+              });
+          });
+      } else {
+
+        this.listMutationService
+          .updateUser(this.id, this.email, this.firstName, this.lastName, this.role, this.password)
+          .subscribe(newList => {
+            this.homePageService
+              .getAllLists()
+              .subscribe(lists => this.lists = lists);
+          });
       }
     }
 
@@ -126,5 +148,9 @@ export class HomePageComponent implements OnInit {
 
   handleFileInput(files: FileList) {
     this.fileToUpload = files.item(0);
+  }
+
+  getLink(id:String) : String{
+    return "http://localhost:8080/users/download-avatar/"+id+"?nocache="+ Math.random().toString(36).substring(5);
   }
 }

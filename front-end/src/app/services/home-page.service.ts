@@ -26,6 +26,8 @@ export class HomePageService {
   constructor(private apollo: Apollo) { }
 
   getAllLists():Observable<List[]> {
+
+    console.log("get list")
     return this.apollo
         .watchQuery({query: homePageQuery})
         .valueChanges

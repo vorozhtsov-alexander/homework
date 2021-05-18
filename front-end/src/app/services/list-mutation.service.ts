@@ -69,12 +69,12 @@ export class ListMutationService {
       }).pipe(map(result => result['success']));
   }
 
-  postFile(id:String, fileToUpload: File) {
+  postFile(id:String, fileToUpload: File):Observable<Object> {
     const endpoint = `${environment.apiUrl}/users/upload-avatar/${id}`; //todo move server url in settings
     const formData: FormData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
-    this.httpClient
+    return this.httpClient
       .post(endpoint, formData)
-      .subscribe();
+      .pipe();
   }
 }

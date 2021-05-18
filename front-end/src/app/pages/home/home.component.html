@@ -59,7 +59,7 @@
       </thead>
       <tbody>
       <tr mdbTableCol *ngFor="let list of lists">
-        <td><img src="http://localhost:8080/users/download-avatar/{{list.id}}" alt="avatar" class="avatar"/></td>
+        <td><img src="{{getLink(list.id)}}" alt="avatar" class="avatar"/></td>
         <th scope="row">{{list.id}}</th>
         <td>{{list.email}}</td>
         <td>{{list.firstName}}</td>
